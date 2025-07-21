@@ -1,5 +1,6 @@
+import html2canvas from "html2canvas"; // nou
 import styles from "./Main.module.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function Main() {
   const [squares, setSquares] = useState(16);
@@ -7,26 +8,32 @@ function Main() {
   const [color, setColor] = useState("#000000");
   const [reset, setReset] = useState(false);
 
+  const gridRef = useRef(null); // referință la grilă
+
   const createGrid = () => {
     const total = squares * squares;
     return Array.from({ length: total }, (_, index) => (
       <div
         key={index}
         className={styles.square}
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-        }}
-        onMouseDown={(e) => {
-          e.target.style.backgroundColor = color;
-        }}
+        style={{ width: `${size}px`, height: `${size}px` }}
+        onMouseDown={(e) => (e.target.style.backgroundColor = color)}
         onMouseEnter={(e) => {
-          if (e.buttons === 1) {
-            e.target.style.backgroundColor = color;
-          }
+          if (e.buttons === 1) e.target.style.backgroundColor = color;
         }}
-      ></div>
+      />
     ));
+  };
+
+  const saveAsImage = () => {
+    if (gridRef.current) {
+      html2canvas(gridRef.current).then((canvas) => {
+        const link = document.createElement("a");
+        link.download = "drawboard.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
   };
 
   return (
@@ -49,7 +56,6 @@ function Main() {
             onChange={(e) => setSquares(parseInt(e.target.value))}
           />
         </div>
-
         <div className={styles.controlGroup}>
           <label>Square Size: {size}px</label>
           <input
@@ -60,7 +66,6 @@ function Main() {
             onChange={(e) => setSize(parseInt(e.target.value))}
           />
         </div>
-
         <div className={styles.controlGroup}>
           <label>Pick Color</label>
           <input
@@ -69,14 +74,17 @@ function Main() {
             onChange={(e) => setColor(e.target.value)}
           />
         </div>
-
         <button className={styles.resetBtn} onClick={() => setReset(!reset)}>
           🧹 Clear Board
+        </button>
+        <button className={styles.saveBtn} onClick={saveAsImage}>
+          💾 Save as Image
         </button>
       </div>
 
       <div
-        key={reset} // trigger re-render
+        key={reset}
+        ref={gridRef}
         className={styles.grid}
         style={{
           gridTemplateColumns: `repeat(${squares}, ${size}px)`,
