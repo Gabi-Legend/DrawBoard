@@ -77,9 +77,6 @@ function Main() {
         <button className={styles.resetBtn} onClick={() => setReset(!reset)}>
           🧹 Clear Board
         </button>
-        <button className={styles.saveBtn} onClick={saveAsImage}>
-          💾 Save as Image
-        </button>
       </div>
 
       <div
@@ -93,6 +90,9 @@ function Main() {
       >
         {createGrid()}
       </div>
+      <button className={styles.saveBtn} onClick={saveAsImage}>
+        💾 Save as Image
+      </button>
     </div>
   );
 }

@@ -88,3 +88,20 @@
     gap: 15px;
   }
 }
+
+.saveBtn {
+  margin-top: 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveBtn:hover {
+  background-color: #388e3c;
+}
